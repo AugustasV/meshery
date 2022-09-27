@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - "master"
+      - "test"
     paths:
       - "mesheryctl/**"
   pull_request:

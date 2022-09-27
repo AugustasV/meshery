@@ -1,8 +1,8 @@
 name: Meshery UI and Server
 on:
-  #   push:
-  #     branches:
-  #       - 'master'
+    push:
+      branches:
+        - 'test'
   #     paths-ignore:
   #       - 'docs/**'
   #       - 'mesheryctl/**'
