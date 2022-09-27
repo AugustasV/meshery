@@ -81,7 +81,7 @@ jobs:
             echo "version=edge" >> $GITHUB_ENV
           fi
           if [ "${{github.event_name }}" == "release" ];then
-            echo "version=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+            echo "version=${{ github.ref_name }}" >> $GITHUB_ENV
           fi
       - uses: actions/checkout@master
         with:
