@@ -111,7 +111,8 @@ jobs:
         run: |
           if [ "${{ inputs.adapter_name }}" != "meshery" ];then
             touch testimagedep.yaml
-            curl ${{ inputs.deployment_url }} > ./testimagedep.yaml
+            svcip="http://$(kubectl get svc -n meshery | grep "meshery " | tr -s ' ' | cut -d " " -f 3)"
+            curl $svcip > ./testimagedep.yaml
             yq e -i '.spec.template.spec.containers[0].image="test:test"' ./testimagedep.yaml 
             yq e -i '.spec.template.spec.containers[0].imagePullPolicy="Never"' ./testimagedep.yaml 
             cat testimagedep.yaml
