@@ -2,6 +2,9 @@
 name: Adapter Integration - Core v2
 
 on:
+  push:
+    branches:
+      - 'test'
   workflow_call:
     inputs:
       expected_resources:
@@ -54,19 +57,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        k8s_version: ['v1.20.11', 'v1.21.5', 'v1.22.2','v1.23.9']
+        k8s_version: ['v1.20.11', 'v1.21.5', 'v1.22.2','v1.23.9','v1.25.2']
     runs-on: ubuntu-latest
     outputs:
       exitstatus: ${{ steps.runresources.outputs.exitstatus }}
     steps:
       - name: Setting up minikube
         id: setk8s
-        uses: manusa/actions-setup-minikube@v2.4.1
+        uses: manusa/actions-setup-minikube@v2.7.0
         with:
-          minikube version: "v1.23.2"
-          kubernetes version: '"${{ matrix.k8s_version }}"'
+          minikube version: "v1.27.1"
+          kubernetes version: '${{ matrix.k8s_version }}'
           driver: docker
-          start args: --cni "${{ inputs.k8s_cni }}"
+          start args: --cni ${{ inputs.k8s_cni }}
       - name: Checkout Code
         uses: actions/checkout@master
 
