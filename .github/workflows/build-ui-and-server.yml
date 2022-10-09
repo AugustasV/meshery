@@ -1,11 +1,11 @@
 name: Meshery UI and Server
 on:
-    push:
-      branches:
-        - 'test'
-      paths-ignore:
-        - 'docs/**'
-        - 'mesheryctl/**'
+  push:
+    branches:
+      - 'test'
+    paths-ignore:
+      - 'docs/**'
+      - 'mesheryctl/**'
   pull_request:
     branches:
       - "master"
