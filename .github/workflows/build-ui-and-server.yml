@@ -3,9 +3,9 @@ on:
     push:
       branches:
         - 'test'
-  #     paths-ignore:
-  #       - 'docs/**'
-  #       - 'mesheryctl/**'
+      paths-ignore:
+        - 'docs/**'
+        - 'mesheryctl/**'
   pull_request:
     branches:
       - "master"
