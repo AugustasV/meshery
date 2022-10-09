@@ -33,6 +33,7 @@ on:
       patternfile_name:
         required: true
         type: string
+        default: 'bookstore'
       k8s_version:
         required: false
         type: string
@@ -115,7 +116,6 @@ jobs:
             yq e -i '.spec.template.spec.containers[0].imagePullPolicy="Never"' ./testimagedep.yaml 
             cat testimagedep.yaml
             kubectl apply -f testimagedep.yaml --namespace=meshery
-            kubectl apply -f ${{ inputs.service_url }} --namespace=meshery
           fi
 
 
