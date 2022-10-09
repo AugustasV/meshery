@@ -79,7 +79,7 @@ jobs:
           if [ "${{ inputs.adapter_name }}" != "meshery" ];then
             cd intall/docker
             eval $(minikube -p minikube docker-env) 
-            docker build -t test:test .
+            docker build -f install/docker/Dockerfile -t test:test
           fi
       - name: Retrieve kubeconfig
         run: cat ~/.kube/config
