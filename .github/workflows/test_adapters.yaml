@@ -22,6 +22,7 @@ on:
       deployment_url:
         required: true
         type: string
+        default: 'http://localhost:8000'
       adapter_name:
         required: true
         type: string
