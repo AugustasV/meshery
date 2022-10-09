@@ -75,6 +75,7 @@ jobs:
       # Build the image by setting appropriate environmental variables in order to access the image from minikube
       - name: Build the tagged Docker image
         run: |
+          cd install/docker
           eval $(minikube -p minikube docker-env) 
           docker build -t test:test .
       - name: Retrieve kubeconfig
