@@ -2,6 +2,9 @@
 name: Adapter Integration - Core
 
 on:
+  push:
+    branches:
+      - 'test'
   workflow_call:
     inputs:
       expected_resources:
