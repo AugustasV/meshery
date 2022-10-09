@@ -16,6 +16,10 @@ on:
       expected_resources_namespaces:
         required: true
         type: string
+      k8s_cni:
+        required: false
+        type: string
+        default: 'bridge'
       service_url:
         required: false
         type: string
