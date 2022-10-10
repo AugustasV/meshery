@@ -33,7 +33,6 @@ on:
       patternfile_name:
         required: true
         type: string
-        default: minimalistiobookinfo
       k8s_version:
         required: false
         type: string
@@ -158,19 +157,19 @@ jobs:
       # This pattern will try to install  service mesh(the first attempt can fail currently fot k8s componets so we will wait 100 seconds after the first apply and then apply again. Since pattern apply is idempotent, this wont be an issue.)
       - name: Pattern apply 
         run: |
-          wget https://github.com/service-mesh-patterns/service-mesh-patterns/blob/master/samples/${{ inputs.patternfile_name }}.yaml
-          cat ./${{ inputs.patternfile_name }}.yaml
-          mesheryctl pattern apply -f ./${{ inputs.patternfile_name }}.yaml
+          wget https://github.com/service-mesh-patterns/service-mesh-patterns/blob/master/samples/minimalistiobookinfo.yaml
+          cat ./minimalistiobookinfo.yaml
+          mesheryctl pattern apply -f ./minimalistiobookinfo.yaml
       - name: Sleep 120 seconds
         run: sleep 120   
       - name: Pattern apply, second iteration. [IDEMPOTENT]
         run: |
-          cat ./${{ inputs.patternfile_name }}.yaml
-          mesheryctl pattern apply -f ./${{ inputs.patternfile_name }}.yaml
+          cat ./minimalistiobookinfo.yaml
+          mesheryctl pattern apply -f ./minimalistiobookinfo.yaml
       - name: Check adapter logs
         run: |
           if  [[ "${{ steps.name.outputs.value}}" != "meshery" ]];then
-            podname=$(kubectl get pods -n meshery | grep ${{ inputs.adapter_name }} | tr -s ' ' | cut -d " " -f 1)
+            podname=$(kubectl get pods -n meshery | grep ${{ steps.name.outputs.value}} | tr -s ' ' | cut -d " " -f 1)
             kubectl logs pod/$podname -n meshery
           fi
       - name: Check Meshery logs
