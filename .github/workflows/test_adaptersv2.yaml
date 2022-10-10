@@ -136,6 +136,7 @@ jobs:
               fi
           done
           mesheryctl system  logs meshery
+          fi
       # If external IP has not been allotted then server is unreachable, exit here in that case
       - name: Check if Meshery has been allotted external IP
         run: |
