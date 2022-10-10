@@ -2,9 +2,6 @@
 name: Adapter Integration - Core
 
 on:
-  push:
-    branches:
-      - 'test'
   workflow_call:
     inputs:
       expected_resources:
@@ -103,16 +100,17 @@ jobs:
         run: |
           curl -L https://meshery.io/install | PLATFORM=kubernetes bash -
 
-      # Start the adapter using yamls
       - name: Start adapter
         run: |
-          touch testimagedep.yaml
-          curl ${{ inputs.deployment_url }} > ./testimagedep.yaml
-          yq e -i '.spec.template.spec.containers[0].image="test:test"' ./testimagedep.yaml 
-          yq e -i '.spec.template.spec.containers[0].imagePullPolicy="Never"' ./testimagedep.yaml 
-          cat testimagedep.yaml
-          kubectl apply -f testimagedep.yaml --namespace=meshery
-          kubectl apply -f ${{ inputs.service_url }} --namespace=meshery
+          if [ "${{ inputs.adapter_name }}" != "meshery" ];then
+            touch testimagedep.yaml
+            curl ${{ inputs.deployment_url }} > ./testimagedep.yaml
+            yq e -i '.spec.template.spec.containers[0].image="test:test"' ./testimagedep.yaml 
+            yq e -i '.spec.template.spec.containers[0].imagePullPolicy="Never"' ./testimagedep.yaml 
+            cat testimagedep.yaml
+            kubectl apply -f testimagedep.yaml --namespace=meshery
+            kubectl apply -f ${{ inputs.service_url }} --namespace=meshery
+          fi
 
       # Start tunnelling to allocate external IP to LoadBalancer type service(meshery)(SO that we can access meshery from outside)
       - name: Start tunelling

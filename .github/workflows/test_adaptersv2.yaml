@@ -29,7 +29,7 @@ on:
       adapter_name:
         required: false
         type: string
-        default: meshery
+        default: "meshery"
       patternfile_name:
         required: true
         type: string
