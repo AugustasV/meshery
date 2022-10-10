@@ -74,7 +74,7 @@ jobs:
           minikube version: "v1.27.1"
           kubernetes version: '${{ matrix.k8s_version }}'
           driver: docker
-          start args: --cni {{ github.event.inputs.k8s_cni }}
+          start args: --cni ${{ github.event.inputs.k8s_cni }}
       - name: Checkout Code
         uses: actions/checkout@master
 
