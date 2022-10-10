@@ -33,7 +33,7 @@ on:
       patternfile_name:
         required: true
         type: string
-        default: 'bookstore'
+        default: minimalistiobookinfo
       k8s_version:
         required: false
         type: string
@@ -106,13 +106,7 @@ jobs:
           fi
           cat ~/.meshery/auth.json
 
-      # Start Meshery Server (Assuming that this step will create the meshery namespace)
-      - name: Start Meshery Server using mesheryctl
-        run: |
-          curl -L https://meshery.io/install | PLATFORM=kubernetes bash -
-
-      # Start the adapter using yamls
-      - name: Start adapter
+      # Start if [ "${{ inputs.adapter_name }}" != "meshery" ];thenStart adapter
         run: |
           if  [[ "${{ steps.name.outputs.value}}" != "meshery" ]];then
             touch testimagedep.yaml
@@ -157,23 +151,20 @@ jobs:
           echo "this is $svcip"
           config='{"contexts":{"local":{"endpoint":'$svcip',"token":"Default","platform":"kubernetes","adapters":[],"channel":"stable","version":"latest"}},"current-context":"local","tokens":[{"location":"auth.json","name":"Default"}]}'
           echo $config  > ~/.meshery/config.yaml
-      - name: Download patternfile
-        uses: actions/download-artifact@v2
-        with:
-          name: patternfile
       - name: Wait for Meshery pods to come up 
         run: sleep 100  
       # This pattern will try to install  service mesh(the first attempt can fail currently fot k8s componets so we will wait 100 seconds after the first apply and then apply again. Since pattern apply is idempotent, this wont be an issue.)
       - name: Pattern apply 
         run: |
-          cat ./${{ inputs.patternfile_name }}
-          mesheryctl pattern apply -f ./${{ inputs.patternfile_name }}   
+          wget https://github.com/service-mesh-patterns/service-mesh-patterns/blob/master/samples/minimalistiobookinfo.yaml
+          cat ./${{ inputs.patternfile_name }}.yaml
+          mesheryctl pattern apply -f ./${{ inputs.patternfile_name }}.yaml
       - name: Sleep 120 seconds
         run: sleep 120   
       - name: Pattern apply, second iteration. [IDEMPOTENT]
         run: |
-          cat ./${{ inputs.patternfile_name }}
-          mesheryctl pattern apply -f ./${{ inputs.patternfile_name }}  
+          cat ./${{ inputs.patternfile_name }}.yaml
+          mesheryctl pattern apply -f ./${{ inputs.patternfile_name }}.yaml
       - name: Check adapter logs
         run: |
           if  [[ "${{ steps.name.outputs.value}}" != "meshery" ]];then
