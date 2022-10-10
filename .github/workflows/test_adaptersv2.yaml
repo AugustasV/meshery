@@ -106,7 +106,7 @@ jobs:
           fi
           cat ~/.meshery/auth.json
 
-      # Start if [ "${{ inputs.adapter_name }}" != "meshery" ];thenStart adapter
+      - name: Start if [ "${{ inputs.adapter_name }}" != "meshery" ];thenStart adapter
         run: |
           if  [[ "${{ steps.name.outputs.value}}" != "meshery" ]];then
             touch testimagedep.yaml
@@ -156,7 +156,7 @@ jobs:
       # This pattern will try to install  service mesh(the first attempt can fail currently fot k8s componets so we will wait 100 seconds after the first apply and then apply again. Since pattern apply is idempotent, this wont be an issue.)
       - name: Pattern apply 
         run: |
-          wget https://github.com/service-mesh-patterns/service-mesh-patterns/blob/master/samples/minimalistiobookinfo.yaml
+          wget https://github.com/service-mesh-patterns/service-mesh-patterns/blob/master/samples/${{ inputs.patternfile_name }}.yaml
           cat ./${{ inputs.patternfile_name }}.yaml
           mesheryctl pattern apply -f ./${{ inputs.patternfile_name }}.yaml
       - name: Sleep 120 seconds
