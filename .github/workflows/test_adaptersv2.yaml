@@ -77,6 +77,8 @@ jobs:
       # Build the image by setting appropriate environmental variables in order to access the image from minikube
       - name: Build the tagged Docker image
         run: |
+          ADAPTER_NAME=${{ github.event.inputs.adapter_name }}
+          NAME=${ADAPTER_NAME:-"meshery"}
           if  [[ "${{ github.event.inputs.adapter_name }}" != "meshery" ]];then
             eval $(minikube -p minikube docker-env) 
             docker build -f install/docker/Dockerfile -t test:test .
