@@ -105,7 +105,13 @@ jobs:
           fi
           cat ~/.meshery/auth.json
 
-      - name: Start if [ "${{ inputs.adapter_name }}" != "meshery" ];thenStart adapter
+      # Start Meshery Server (Assuming that this step will create the meshery namespace)
+      - name: Start Meshery Server using mesheryctl
+        run: |
+          curl -L https://meshery.io/install | PLATFORM=kubernetes bash -
+
+      # Start the adapter using yamls
+      - name: Start adapter
         run: |
           if  [[ "${{ steps.name.outputs.value}}" != "meshery" ]];then
             touch testimagedep.yaml
@@ -125,8 +131,6 @@ jobs:
       # Checking meshery server logs
       - name: Check Meshery pod logs
         run: |
-          sudo curl -L https://meshery.io/install | DEPLOY_MESHERY=false bash -
-          mesheryctl system start
           SECONDS=0
           end=$((SECONDS+300))
           while [ $SECONDS -lt $end ]; do
@@ -136,7 +140,6 @@ jobs:
               fi
           done
           mesheryctl system  logs meshery
-          fi
       # If external IP has not been allotted then server is unreachable, exit here in that case
       - name: Check if Meshery has been allotted external IP
         run: |
