@@ -161,7 +161,7 @@ jobs:
       # This pattern will try to install  service mesh(the first attempt can fail currently fot k8s componets so we will wait 100 seconds after the first apply and then apply again. Since pattern apply is idempotent, this wont be an issue.)
       - name: Pattern apply 
         run: |
-          wget https://github.com/service-mesh-patterns/service-mesh-patterns/blob/master/samples/minimalistiobookinfo.yaml
+          wget https://raw.githubusercontent.com/service-mesh-patterns/service-mesh-patterns/master/samples/minimalistiobookinfo.yaml
           cat ./minimalistiobookinfo.yaml
           mesheryctl pattern apply -f ./minimalistiobookinfo.yaml
       - name: Sleep 120 seconds
