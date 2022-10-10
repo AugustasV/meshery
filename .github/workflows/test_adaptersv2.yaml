@@ -63,6 +63,11 @@ jobs:
     outputs:
       exitstatus: ${{ steps.runresources.outputs.exitstatus }}
     steps:
+      - name: Set name output
+        id: name
+        run: |
+          USER_INPUT=${{ github.event.inputs.adapter_name }}
+          echo "::set-output name=value::${USER_INPUT:-"meshery"}"
       # - name: Setting up minikube
       #   id: setk8s
       #   uses: manusa/actions-setup-minikube@v2.7.0
@@ -77,9 +82,8 @@ jobs:
       # Build the image by setting appropriate environmental variables in order to access the image from minikube
       - name: Build the tagged Docker image
         run: |
-          ADAPTER_NAME=${{ github.event.inputs.adapter_name }}
-          NAME=${ADAPTER_NAME:-"meshery"}
-          if  [[ "${{ github.event.inputs.adapter_name }}" != "meshery" ]];then
+
+          if  [[ "${{ steps.name.outputs.value}}" != "meshery" ]];then
             eval $(minikube -p minikube docker-env) 
             docker build -f install/docker/Dockerfile -t test:test .
           fi
