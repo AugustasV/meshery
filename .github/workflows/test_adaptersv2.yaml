@@ -253,6 +253,7 @@ jobs:
         with:
           name: ${{ inputs.output_filename }}
           path: ./${{ inputs.output_filename }}
+        continue-on-error: true
       - name: exit
         run: |
           if [ "$exitstatus" -eq 1 ];then
