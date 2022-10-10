@@ -58,25 +58,25 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        k8s_version: ['v1.20.11', 'v1.21.5', 'v1.22.2','v1.23.9','v1.25.2']
+        k8s_version: ['v1.25.2']
     runs-on: ubuntu-22.04
     outputs:
       exitstatus: ${{ steps.runresources.outputs.exitstatus }}
     steps:
-      - name: Setting up minikube
-        id: setk8s
-        uses: manusa/actions-setup-minikube@v2.7.0
-        with:
-          minikube version: "v1.27.1"
-          kubernetes version: '${{ matrix.k8s_version }}'
-          driver: docker
-          start args: --cni bridge
-      - name: Checkout Code
-        uses: actions/checkout@master
+      # - name: Setting up minikube
+      #   id: setk8s
+      #   uses: manusa/actions-setup-minikube@v2.7.0
+      #   with:
+      #     minikube version: "v1.27.1"
+      #     kubernetes version: '${{ matrix.k8s_version }}'
+      #     driver: docker
+      #     start args: --cni bridge
+      # - name: Checkout Code
+      #   uses: actions/checkout@master
 
       # Build the image by setting appropriate environmental variables in order to access the image from minikube
       - name: Build the tagged Docker image
-        if: "${{ inputs.adapter_name != 'meshery' }}"
+        if: ${{ inputs.adapter_name != 'meshery' }}
         run: |
             eval $(minikube -p minikube docker-env) 
             docker build -f install/docker/Dockerfile -t test:test .
