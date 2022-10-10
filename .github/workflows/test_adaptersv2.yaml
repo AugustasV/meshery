@@ -68,21 +68,20 @@ jobs:
         run: |
           USER_INPUT=${{ github.event.inputs.adapter_name }}
           echo "::set-output name=value::${USER_INPUT:-"meshery"}"
-      # - name: Setting up minikube
-      #   id: setk8s
-      #   uses: manusa/actions-setup-minikube@v2.7.0
-      #   with:
-      #     minikube version: "v1.27.1"
-      #     kubernetes version: '${{ matrix.k8s_version }}'
-      #     driver: docker
-      #     start args: --cni bridge
-      # - name: Checkout Code
-      #   uses: actions/checkout@master
+      - name: Setting up minikube
+        id: setk8s
+        uses: manusa/actions-setup-minikube@v2.7.0
+        with:
+          minikube version: "v1.27.1"
+          kubernetes version: '${{ matrix.k8s_version }}'
+          driver: docker
+          start args: --cni bridge
+      - name: Checkout Code
+        uses: actions/checkout@master
 
       # Build the image by setting appropriate environmental variables in order to access the image from minikube
       - name: Build the tagged Docker image
         run: |
-
           if  [[ "${{ steps.name.outputs.value}}" != "meshery" ]];then
             eval $(minikube -p minikube docker-env) 
             docker build -f install/docker/Dockerfile -t test:test .
@@ -115,7 +114,7 @@ jobs:
       # Start the adapter using yamls
       - name: Start adapter
         run: |
-          if [ "${{ inputs.adapter_name }}" != "meshery" ];then
+          if  [[ "${{ steps.name.outputs.value}}" != "meshery" ]];then
             touch testimagedep.yaml
             curl ${{ inputs.deployment_url }} > ./testimagedep.yaml
             yq e -i '.spec.template.spec.containers[0].image="test:test"' ./testimagedep.yaml 
@@ -177,7 +176,7 @@ jobs:
           mesheryctl pattern apply -f ./${{ inputs.patternfile_name }}  
       - name: Check adapter logs
         run: |
-          if [ "${{ inputs.adapter_name }}" != "meshery" ];then
+          if  [[ "${{ steps.name.outputs.value}}" != "meshery" ]];then
             podname=$(kubectl get pods -n meshery | grep ${{ inputs.adapter_name }} | tr -s ' ' | cut -d " " -f 1)
             kubectl logs pod/$podname -n meshery
           fi
