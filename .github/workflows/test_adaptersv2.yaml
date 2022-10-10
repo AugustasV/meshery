@@ -126,6 +126,7 @@ jobs:
       - name: Check Meshery pod logs
         run: |
           curl -L https://meshery.io/install | DEPLOY_MESHERY=false bash -
+          mesheryctl system start
           SECONDS=0
           end=$((SECONDS+300))
           while [ $SECONDS -lt $end ]; do
