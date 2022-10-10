@@ -111,10 +111,12 @@ jobs:
         run: |
           if [ "${{ inputs.adapter_name }}" != "meshery" ];then
             touch testimagedep.yaml
+            curl ${{ inputs.deployment_url }} > ./testimagedep.yaml
             yq e -i '.spec.template.spec.containers[0].image="test:test"' ./testimagedep.yaml 
             yq e -i '.spec.template.spec.containers[0].imagePullPolicy="Never"' ./testimagedep.yaml 
             cat testimagedep.yaml
             kubectl apply -f testimagedep.yaml --namespace=meshery
+            kubectl apply -f ${{ inputs.service_url }} --namespace=meshery
           fi
 
 
